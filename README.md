@@ -1,2 +1,2 @@
 # lakibeam1
- lakibeam driver for ros2
+ lakibeam1 driver for ros2
