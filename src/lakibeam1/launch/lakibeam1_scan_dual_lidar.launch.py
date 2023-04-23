@@ -1,53 +1,3 @@
-# <?xml version="1.0"?>
-
-# <launch>
-#     <node name="richbeam_lidar_node0" pkg="lakibeam1" type="lakibeam1_scan_node" output="screen"><!--lidar0设置-->
-#     <remap from="/richbeam_lidar/scan0" to="/scan0" />
-#         <param name="frame_id" type="string" value="laser"/><!--frame_id设置-->
-#         <param name="output_topic" type="string" value="scan0" /><!--topic设置-->
-#         <param name="inverted" type="bool" value="false"/><!--配置是否倒装,true倒装-->
-#         <param name="hostip" type="string" value="0.0.0.0"/><!--配置本机监听地址，0.0.0.0表示监听全部-->
-#         <param name="port" type="string" value="2368"/><!--配置本机监听端口-->
-#         <param name="angle_offset" type="int" value="0"/><!--配置点云旋转角度，可以是负数-->
-#     </node>
-
-#     <node name="richbeam_lidar_node1" pkg="lakibeam1" type="lakibeam1_scan_node" output="screen"><!--lidar1设置-->
-#     <remap from="/richbeam_lidar/scan1" to="/scan1" />
-#         <param name="frame_id" type="string" value="laser"/><!--frame_id设置-->
-#         <param name="output_topic" type="string" value="scan1" /><!--topic设置-->
-#         <param name="inverted" type="bool" value="false"/><!--配置是否倒装,true倒装-->
-#         <param name="hostip" type="string" value="0.0.0.0"/><!--配置本机监听地址，0.0.0.0表示监听全部-->
-#         <param name="port" type="string" value="2369"/><!--配置本机监听端口-->
-#         <param name="angle_offset" type="int" value="0"/><!--配置点云旋转角度，可以是负数-->
-#     </node>
-    
-# </launch>
-
-# <?xml version="1.0"?>
-
-# <launch>
-#     <node name="richbeam_lidar_node0" pkg="lakibeam1" type="lakibeam1_scan_node" output="screen"><!--lidar0设置-->
-#     <remap from="/richbeam_lidar/scan0" to="/scan0" />
-#         <param name="frame_id" type="string" value="laser"/><!--frame_id设置-->
-#         <param name="output_topic" type="string" value="scan0" /><!--topic设置-->
-#         <param name="inverted" type="bool" value="false"/><!--配置是否倒装,true倒装-->
-#         <param name="hostip" type="string" value="0.0.0.0"/><!--配置本机监听地址，0.0.0.0表示监听全部-->
-#         <param name="port" type="string" value="2368"/><!--配置本机监听端口-->
-#         <param name="angle_offset" type="int" value="0"/><!--配置点云旋转角度，可以是负数-->
-#     </node>
-
-#     <node name="richbeam_lidar_node1" pkg="lakibeam1" type="lakibeam1_scan_node" output="screen"><!--lidar1设置-->
-#     <remap from="/richbeam_lidar/scan1" to="/scan1" />
-#         <param name="frame_id" type="string" value="laser"/><!--frame_id设置-->
-#         <param name="output_topic" type="string" value="scan1" /><!--topic设置-->
-#         <param name="inverted" type="bool" value="false"/><!--配置是否倒装,true倒装-->
-#         <param name="hostip" type="string" value="0.0.0.0"/><!--配置本机监听地址，0.0.0.0表示监听全部-->
-#         <param name="port" type="string" value="2369"/><!--配置本机监听端口-->
-#         <param name="angle_offset" type="int" value="0"/><!--配置点云旋转角度，可以是负数-->
-#     </node>
-    
-#     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find lakibeam1)/rviz/lakibeam1_scan_dual.rviz" />
-# </launch>
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -59,11 +9,13 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    frame_id = LaunchConfiguration('frame_id')
+    frame_id_0 = LaunchConfiguration('frame_id_0')
+    frame_id_1 = LaunchConfiguration('frame_id_1')
     output_topic0 = LaunchConfiguration('output_topic0')
     output_topic1 = LaunchConfiguration('output_topic1')
     inverted = LaunchConfiguration('inverted')
-    hostip = LaunchConfiguration('hostip')
+    hostip_0 = LaunchConfiguration('hostip_0')
+    hostip_1 = LaunchConfiguration('hostip_1')
     port0 = LaunchConfiguration('port0')
     port1 = LaunchConfiguration('port1')
     angle_offset = LaunchConfiguration('angle_offset')
@@ -75,35 +27,35 @@ def generate_launch_description():
     sensorip = LaunchConfiguration('sensorip')
 
 
-    # frame_id = LaunchConfiguration('frame_id', default='laser')
-    # output_topic0 = LaunchConfiguration('output_topic0', default='pcd0')
-    # output_topic1 = LaunchConfiguration('output_topic1', default='pcd1')
-    # inverted = LaunchConfiguration('inverted', default='false')
-    # hostip = LaunchConfiguration('hostip',default='0.0.0.0')
-    # port0 = LaunchConfiguration('port0',default='2368')
-    # port1 = LaunchConfiguration('port1',default='2369')
-    # angle_offset = LaunchConfiguration('angle_offset',default='0')
     
 
-    declare_frame_id_cmd = DeclareLaunchArgument(
-    'frame_id',
-    default_value='laser',
+    declare_frame_id0_cmd = DeclareLaunchArgument(
+    'frame_id_0',
+    default_value='front_lidar',
+    )
+    declare_frame_id1_cmd = DeclareLaunchArgument(
+    'frame_id_1',
+    default_value='rear_lidar',
     )
     declare_output_topic0_cmd = DeclareLaunchArgument(
     'output_topic0',
-    default_value='scan0',
+    default_value='scan_0',
     )
     declare_output_topic1_cmd = DeclareLaunchArgument(
     'output_topic1',
-    default_value='scan1',
+    default_value='scan_1',
     )
     declare_inverted_cmd = DeclareLaunchArgument(
     'inverted',
     default_value='false',
     )
-    declare_hostip_cmd = DeclareLaunchArgument(
-    'hostip',
-    default_value='0.0.0.0',
+    declare_hostip0_cmd = DeclareLaunchArgument(
+    'hostip_0',
+    default_value='192.168.8.1',
+    )
+    declare_hostip1_cmd = DeclareLaunchArgument(
+    'hostip_1',
+    default_value='192.168.8.3',
     )
     declare_port0_cmd = DeclareLaunchArgument(
     'port0',
@@ -147,10 +99,10 @@ def generate_launch_description():
         name='richbeam_lidar_node0',
         executable='lakibeam1_scan_node',
         parameters=[{
-            'frame_id':frame_id,
+            'frame_id':frame_id_0,
             'output_topic':output_topic0,
             'inverted':inverted,
-            'hostip':hostip,
+            'hostip':hostip_0,
             'port':port0,
             'angle_offset':angle_offset
         }],
@@ -161,18 +113,18 @@ def generate_launch_description():
         name='richbeam_lidar_node1',
         executable='lakibeam1_scan_node',
         parameters=[{
-            'frame_id':frame_id,
+            'frame_id':frame_id_1,
             'output_topic':output_topic1,
             'inverted':inverted,
-            'hostip':hostip,
-            'port':port1,
+            'hostip':hostip_1,
+            'port':port0,
             'angle_offset':angle_offset
         }],
         output='screen'
     )
     lakibeam1_pcd_dir = get_package_share_directory('lakibeam1')
-    rviz_config_dir = os.path.join(lakibeam1_pcd_dir,'rviz','lakibeam1_scan_dual.rviz')
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    # rviz_config_dir = os.path.join(lakibeam1_pcd_dir,'rviz','lakibeam1_scan_dual.rviz')
+    # use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     # rviz_node = Node(
     #         package='rviz2',
     #         executable='rviz2',
@@ -182,11 +134,13 @@ def generate_launch_description():
     #         output='screen')
     ld = LaunchDescription()
 
-    ld.add_action(declare_frame_id_cmd)
+    ld.add_action(declare_frame_id0_cmd)
+    ld.add_action(declare_frame_id1_cmd)
     ld.add_action(declare_output_topic0_cmd)
     ld.add_action(declare_output_topic1_cmd)
     ld.add_action(declare_inverted_cmd)
-    ld.add_action(declare_hostip_cmd)
+    ld.add_action(declare_hostip0_cmd)
+    ld.add_action(declare_hostip1_cmd)
     ld.add_action(declare_port0_cmd)
     ld.add_action(declare_port1_cmd)
     ld.add_action(declare_angle_offset_cmd)
